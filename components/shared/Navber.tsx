@@ -2,12 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useTheme } from "next-themes";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import ThemeToggle from "@/components/ThemeToggle";
 import {
   Menu,
-  Moon,
-  Sun,
   X,
   Search,
   FileText,
@@ -15,28 +14,23 @@ import {
   Folder,
   Layers,
   BookOpen,
+  Sparkles,
 } from "lucide-react";
 import SearchDialog from "./SearchDialog";
 
 const navItems = [
   { name: "Home", href: "/", icon: Command },
-  { name: "Project", href: "#project", icon: Folder },
-  { name: "Stacks", href: "#stacks", icon: Layers },
-  { name: "Blogs", href: "#blogs", icon: BookOpen },
+  { name: "Projects", href: "/projects", icon: Folder },
+  { name: "Stacks", href: "/stacks", icon: Layers },
+  { name: "Blogs", href: "/blogs", icon: BookOpen },
 ];
 
 export default function Navbar() {
-  const [activeItem, setActiveItem] = useState("Home");
+  const pathname = usePathname();
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [mounted, setMounted] = useState(false);
-
-  const { resolvedTheme, setTheme } = useTheme();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Keyboard shortcut (Cmd+K / Ctrl+K)
   useEffect(() => {
@@ -50,91 +44,112 @@ export default function Navbar() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  // SearchDialog-এর onSelectItem হ্যান্ডলার (নাম গ্রহণ করে রুট চেঞ্জ করবে)
+  const handleSelectItem = (name: string) => {
+    setIsSearchOpen(false);
+    const selectedItem = navItems.find((item) => item.name === name);
+    if (selectedItem) {
+      router.push(selectedItem.href);
+    }
+  };
+
   return (
-    <header className="sticky top-4 z-40 mx-auto max-w-4xl px-4 transition-all">
-      <div className="flex items-center justify-between rounded-full border border-border/60 bg-background/80 p-1.5 backdrop-blur-xl shadow-md">
-        
-        {/* Left Side: Navigation Links */}
-        <nav aria-label="Primary navigation" className="hidden md:flex items-center gap-1 pl-1">
+    <header className="sticky top-5 z-50 mx-auto max-w-4xl px-4 transition-all duration-300">
+      {/* Floating Glass Container */}
+      <div className="flex items-center justify-between rounded-full border border-white/10 dark:border-white/10 bg-background/60 p-1.5 backdrop-blur-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.12)]">
+        {/* Left Side: Desktop Navigation Links */}
+        <nav
+          aria-label="Primary navigation"
+          className="hidden md:flex items-center gap-1 pl-1"
+        >
           {navItems.map((item) => {
-            const isActive = activeItem === item.name;
+            const isActive =
+              item.href === "/"
+                ? pathname === "/"
+                : pathname.startsWith(item.href);
+
+            const Icon = item.icon;
+
             return (
               <Link
                 key={item.name}
                 href={item.href}
-                onClick={() => setActiveItem(item.name)}
-                className={`relative px-3.5 py-1.5 text-xs font-semibold transition-colors duration-200 ${
-                  isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                className={`relative flex items-center gap-2 px-4 py-1.5 text-xs font-medium transition-colors duration-200 ${
+                  isActive
+                    ? "text-foreground font-semibold"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {isActive && (
                   <motion.div
                     layoutId="active-pill"
-                    className="absolute inset-0 bg-muted/80 rounded-full -z-10"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    className="absolute inset-0 bg-secondary/80 dark:bg-zinc-800/80 rounded-full -z-10 border border-border/50 shadow-sm"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   />
                 )}
-                {item.name}
+                <Icon
+                  className={`size-3.5 ${isActive ? "text-foreground" : "opacity-70"}`}
+                />
+                <span>{item.name}</span>
               </Link>
             );
           })}
         </nav>
 
-        {/* Left Side (Mobile View Placeholder/Logo) */}
+        {/* Mobile View Logo */}
         <div className="flex md:hidden items-center pl-3">
-          <Link href="/" className="font-bold text-xs tracking-tight text-foreground">
-            Portfolio
+          <Link
+            href="/"
+            className="flex items-center gap-1.5 font-bold text-xs tracking-wide text-foreground"
+          >
+            <Sparkles className="size-3.5 text-amber-500" />
+            <span>PORTFOLIO</span>
           </Link>
         </div>
 
-        {/* Right Side: Actions */}
+        {/* Right Side Actions */}
         <div className="flex items-center gap-1.5">
           {/* Search Button */}
           <button
             type="button"
             onClick={() => setIsSearchOpen(true)}
-            className="flex items-center gap-2 rounded-full border border-border/50 bg-muted/40 px-3 py-1 text-xs text-muted-foreground transition-all hover:bg-muted hover:text-foreground"
+            className="flex items-center gap-2 rounded-full border border-border/40 bg-muted/30 px-3 py-1.5 text-xs text-muted-foreground transition-all hover:bg-muted/60 hover:text-foreground active:scale-95"
           >
             <Search className="size-3.5" />
-            <span className="hidden sm:inline-block">Search...</span>
-            <kbd className="hidden sm:inline-flex h-4 items-center rounded border bg-background px-1 text-[10px] font-mono text-muted-foreground">
+            <span className="hidden sm:inline-block font-normal">
+              Search...
+            </span>
+            <kbd className="hidden sm:inline-flex h-4 items-center rounded border border-border/60 bg-background/80 px-1.5 text-[9px] font-mono font-medium text-muted-foreground">
               ⌘K
             </kbd>
           </button>
 
           {/* Resume Button */}
           <a
-            href="/resume.pdf"
+            href="https://drive.google.com/file/d/1Tlu9OmPIQ2DvizKBkvjFcT3nJoz9vOrt/view?usp=sharing"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-foreground px-3.5 py-1 text-xs font-semibold text-background transition-transform active:scale-95 hover:opacity-90 shadow-sm"
+            className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-foreground px-4 py-1.5 text-xs font-medium text-background transition-all hover:opacity-90 active:scale-95 shadow-sm"
           >
             <FileText className="size-3.5" />
             <span>Resume</span>
           </a>
 
           {/* Theme Toggle Button */}
-          <button
-            type="button"
-            aria-label="Toggle theme"
-            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-            className="rounded-full p-1.5 border border-border/50 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground active:scale-95"
-          >
-            {mounted && resolvedTheme === "dark" ? (
-              <Sun className="size-3.5 text-amber-400" />
-            ) : (
-              <Moon className="size-3.5 text-slate-700" />
-            )}
-          </button>
+          <ThemeToggle />
 
           {/* Mobile Menu Toggle Button */}
           <button
             type="button"
             aria-label="Toggle mobile menu"
             onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-            className="rounded-full p-1.5 border border-border/50 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:hidden active:scale-95"
+            className="rounded-full p-2 border border-border/40 text-muted-foreground transition-all hover:bg-muted/60 hover:text-foreground md:hidden active:scale-90"
           >
-            {isMobileMenuOpen ? <X className="size-3.5" /> : <Menu className="size-3.5" />}
+            {isMobileMenuOpen ? (
+              <X className="size-3.5" />
+            ) : (
+              <Menu className="size-3.5" />
+            )}
           </button>
         </div>
       </div>
@@ -143,43 +158,44 @@ export default function Navbar() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.98 }}
+            initial={{ opacity: 0, y: -12, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.98 }}
-            transition={{ duration: 0.2 }}
-            className="mt-2 rounded-2xl border border-border/60 bg-background/95 backdrop-blur-xl p-3 md:hidden shadow-xl"
+            exit={{ opacity: 0, y: -12, scale: 0.95 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="mt-2.5 rounded-3xl border border-border/50 bg-background/90 backdrop-blur-2xl p-3 md:hidden shadow-2xl overflow-hidden"
           >
             <nav className="flex flex-col gap-1">
               {navItems.map((item) => {
-                const isActive = activeItem === item.name;
+                const isActive =
+                  item.href === "/"
+                    ? pathname === "/"
+                    : pathname.startsWith(item.href);
                 const Icon = item.icon;
+
                 return (
                   <Link
                     key={item.name}
                     href={item.href}
-                    onClick={() => {
-                      setActiveItem(item.name);
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className={`flex items-center gap-3 rounded-xl px-3.5 py-2 text-xs font-medium transition-all ${
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`flex items-center gap-3 rounded-2xl px-4 py-2.5 text-xs font-medium transition-all ${
                       isActive
-                        ? "bg-primary text-primary-foreground font-semibold"
-                        : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                        ? "bg-foreground text-background font-semibold"
+                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                     }`}
                   >
-                    <Icon className="size-3.5" />
+                    <Icon className="size-4" />
                     <span>{item.name}</span>
                   </Link>
                 );
               })}
 
               <a
-                href="/resume.pdf"
+                href="https://drive.google.com/file/d/1Tlu9OmPIQ2DvizKBkvjFcT3nJoz9vOrt/view?usp=sharing"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-muted/40 py-2 text-xs font-medium text-foreground hover:bg-muted transition-colors sm:hidden"
+                className="mt-2 flex w-full items-center justify-center gap-2 rounded-2xl border border-neutral-800/80 bg-[#111111] py-2.5 text-xs font-medium text-neutral-200 hover:bg-neutral-800 hover:text-white transition-all shadow-sm sm:hidden active:scale-95"
               >
-                <FileText className="size-3.5 text-primary" />
+                <FileText className="size-4 text-emerald-400" />
                 <span>Resume</span>
               </a>
             </nav>
@@ -194,7 +210,7 @@ export default function Navbar() {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         items={navItems}
-        onSelectItem={setActiveItem}
+        onSelectItem={(name: string) => handleSelectItem(name)}
       />
     </header>
   );

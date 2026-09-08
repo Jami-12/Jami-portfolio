@@ -1,5 +1,4 @@
 @import "tailwindcss";
-/* @import "shadcn/tailwind.css"; */
 
 @custom-variant dark (&:is(.dark *));
 
@@ -44,12 +43,50 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* 1. Default Light Mode */
 :root {
+  color-scheme: light;
+
+  --background: #f8fafc;
+  --foreground: #09090b;
+  --fade-start: #ffffff;
+  --fade-end: #eef2f7;
+
+  --card: #ffffff;
+  --card-foreground: #09090b;
+
+  --popover: #ffffff;
+  --popover-foreground: #09090b;
+
+  --primary: #18181b;
+  --primary-foreground: #fafafa;
+
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
+
+  --destructive: #ef4444;
+
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #a1a1aa;
+
+  --radius: 0.75rem;
+}
+
+/* 2. Dark Mode Overrides (.dark class যোগ হলে কাজ করবে) */
+.dark {
   color-scheme: dark;
 
-  /* Default Deep Dark Theme (Exact match to image) */
-  --background: #09090b;
+  --background: #080808;
   --foreground: #f4f4f5;
+  --fade-start: #0d0d10;
+  --fade-end: #070709;
 
   --card: #121215;
   --card-foreground: #f4f4f5;
@@ -74,36 +111,6 @@
   --border: #27272a;
   --input: #27272a;
   --ring: #3f3f46;
-
-  --radius: 0.75rem;
-}
-
-/* Specific theme overrides */
-.theme-night {
-  --background: #09090b;
-  --foreground: #f4f4f5;
-
-  --card: #121215;
-  --card-foreground: #f4f4f5;
-
-  --popover: #121215;
-  --popover-foreground: #f4f4f5;
-
-  --muted: #18181b;
-  --muted-foreground: #a1a1aa;
-
-  --border: #27272a;
-  --input: #27272a;
-  --ring: #3f3f46;
-
-  --secondary: #18181b;
-  --secondary-foreground: #f4f4f5;
-
-  --primary: #fafafa;
-  --primary-foreground: #09090b;
-
-  --accent: #18181b;
-  --accent-foreground: #f4f4f5;
 }
 
 @layer base {
@@ -112,9 +119,104 @@
   }
 
   body {
-    @apply bg-background text-foreground;
-    /* High-contrast noise texture to match picture */
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
-    background-repeat: repeat;
+    @apply text-foreground transition-colors duration-200;
+    background-color: var(--background);
+    background-image: linear-gradient(
+      180deg,
+      var(--fade-start) 0%,
+      var(--background) 45%,
+      var(--fade-end) 100%
+    );
+    background-repeat: no-repeat;
+    background-size: cover;
   }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 180px 180px;
+  }
+}
+
+/* Custom Cursor Dot & Glow Effect
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--foreground);
+  border-radius: 50%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease-out;
+}
+
+.cursor-glow {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s ease;
+}
+
+.dark .cursor-glow {
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.01) 40%,
+    transparent 70%
+  );
+}
+
+Hide default browser cursor globally */
+/* html, body, a, button, input {
+  cursor: none !important;
+}
+
+/* Custom Cat Cursor Container */
+/* .cat-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  user-select: none;
+} */ 
+
+html[data-scroll-behavior="smooth"] {
+  scroll-behavior: smooth;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
 }

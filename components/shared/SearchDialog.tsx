@@ -120,7 +120,7 @@ export default function SearchDialog({
                     No matching navigation links found.
                   </p>
                   <p className="mt-1 text-xs text-muted-foreground/60">
-                    Try searching for terms like "Projects" or "Stacks".
+                    Try searching for terms like Projects or Stacks.
                   </p>
                 </div>
               )}
