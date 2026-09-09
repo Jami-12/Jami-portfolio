@@ -40,7 +40,7 @@ const techStack = [
 
 export default function HeroBanner() {
   return (
-    <section className="mx-auto max-w-4xl px-4 pt-2">
+    <section className="mx-auto max-w-4xl px-4 mt-6 pt-2">
       {/* Container Card */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
