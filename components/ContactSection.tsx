@@ -64,7 +64,7 @@ export default function ContactSection() {
   return (
     <section
       id="contact"
-      className="mx-auto max-w-6xl scroll-mt-24 px-4 py-16 md:py-24"
+      className="mx-auto max-w-4xl scroll-mt-24 px-4 py-16 md:py-24"
     >
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -84,8 +84,8 @@ export default function ContactSection() {
           </h2>
           <p className="mx-auto mt-2 max-w-xl text-xs text-muted-foreground sm:text-sm">
             Have a project in mind, a collaboration in the works, or just want
-            to say hello? Fill out the form below and I&apos;ll reply as soon
-            as I can.
+            to say hello? Fill out the form below and I&apos;ll reply as soon as
+            I can.
           </p>
         </header>
 
@@ -134,7 +134,9 @@ export default function ContactSection() {
             </div>
 
             <div className="rounded-3xl border border-border/50 bg-card/60 p-5 shadow-xl backdrop-blur-md">
-              <h3 className="text-sm font-bold text-foreground">Social Links</h3>
+              <h3 className="text-sm font-bold text-foreground">
+                Social Links
+              </h3>
 
               <div className="mt-4 flex gap-3">
                 <a

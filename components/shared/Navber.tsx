@@ -125,15 +125,15 @@ export default function Navbar() {
           </button>
 
           {/* Resume Button */}
-          <a
-            href="https://drive.google.com/file/d/1Tlu9OmPIQ2DvizKBkvjFcT3nJoz9vOrt/view?usp=sharing"
+          <Link
+            href="/resume"
             target="_blank"
             rel="noopener noreferrer"
             className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-foreground px-4 py-1.5 text-xs font-medium text-background transition-all hover:opacity-90 active:scale-95 shadow-sm"
           >
             <FileText className="size-3.5" />
             <span>Resume</span>
-          </a>
+          </Link>
 
           {/* Theme Toggle Button */}
           <ThemeToggle />
@@ -189,15 +189,15 @@ export default function Navbar() {
                 );
               })}
 
-              <a
-                href="https://drive.google.com/file/d/1Tlu9OmPIQ2DvizKBkvjFcT3nJoz9vOrt/view?usp=sharing"
+              <Link
+                href="/resume"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-2 flex w-full items-center justify-center gap-2 rounded-2xl border border-neutral-800/80 bg-[#111111] py-2.5 text-xs font-medium text-neutral-200 hover:bg-neutral-800 hover:text-white transition-all shadow-sm sm:hidden active:scale-95"
               >
                 <FileText className="size-4 text-emerald-400" />
                 <span>Resume</span>
-              </a>
+              </Link>
             </nav>
           </motion.div>
         )}

@@ -195,38 +195,6 @@ export default function BlogsPage() {
             </div>
           )}
         </main>
-
-        {/* Footer */}
-        <footer className="flex flex-col items-center justify-between gap-4 border-t border-border/60 pt-8 text-xs text-muted-foreground md:flex-row">
-          <p>
-            &copy; {new Date().getFullYear()} Mujaddid Ahmed Jami. All rights
-            reserved.
-          </p>
-          <div className="flex items-center gap-4 font-medium">
-            <a
-              href="https://github.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors hover:text-foreground"
-            >
-              GitHub
-            </a>
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-colors hover:text-foreground"
-            >
-              LinkedIn
-            </a>
-            <a
-              href="mailto:mujaddidahmedjami2025@gmail.com"
-              className="transition-colors hover:text-foreground"
-            >
-              Email
-            </a>
-          </div>
-        </footer>
       </div>
     </div>
   );

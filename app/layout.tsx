@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Navbar from "@/components/shared/Navber";
+import Footer from "@/components/shared/Footer";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { AudioProvider, Track } from "@/components/Context/AudioContext";
 import FloatingPlayer from "@/components/Context/FloatingPlayer";
@@ -47,6 +48,7 @@ export default function RootLayout({
           <AudioProvider tracks={playlistTracks}>
             <Navbar />
             {children}
+            <Footer />
             <FloatingPlayer />
           </AudioProvider>
         </ThemeProvider>
