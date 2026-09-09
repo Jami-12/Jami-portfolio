@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState, useTransition } from "react";
 import { motion } from "framer-motion";
 import {
   Send,
@@ -12,74 +12,17 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa6";
-
-interface FormInputs {
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-  website: string;
-}
-
-const initialForm: FormInputs = {
-  name: "",
-  email: "",
-  subject: "",
-  message: "",
-  website: "",
-};
+import { sendEmail } from "@/app/actions/contact";
 
 type Status =
   | { kind: "idle" }
-  | { kind: "loading" }
   | { kind: "success"; message: string }
   | { kind: "error"; message: string };
 
 export default function ContactSection() {
-  const [form, setForm] = useState<FormInputs>(initialForm);
+  const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setStatus({ kind: "loading" });
-
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-
-      const payload = await res.json();
-
-      if (res.ok && payload.ok) {
-        setStatus({
-          kind: "success",
-          message: "Your message has been sent. I'll get back to you soon!",
-        });
-        setForm(initialForm);
-      } else if (payload.errors?.length) {
-        setStatus({ kind: "error", message: payload.errors.join(" ") });
-      } else {
-        setStatus({
-          kind: "error",
-          message: payload.error || "Something went wrong. Please try again.",
-        });
-      }
-    } catch {
-      setStatus({
-        kind: "error",
-        message: "Network error. Please check your connection and try again.",
-      });
-    }
-  };
+  const [isPending, startTransition] = useTransition();
 
   const contactDetails = [
     {
@@ -99,6 +42,24 @@ export default function ContactSection() {
       value: "Usually within 24 hours",
     },
   ];
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus({ kind: "idle" });
+
+    const formData = new FormData(e.currentTarget);
+
+    startTransition(async () => {
+      const result = await sendEmail(formData);
+
+      if (result.success) {
+        setStatus({ kind: "success", message: result.message });
+        formRef.current?.reset();
+      } else {
+        setStatus({ kind: "error", message: result.message });
+      }
+    });
+  };
 
   return (
     <section
@@ -183,7 +144,8 @@ export default function ContactSection() {
                   aria-label="GitHub"
                   className="flex size-10 items-center justify-center rounded-xl border border-border/60 bg-muted/40 text-muted-foreground transition-all hover:border-primary/40 hover:text-foreground active:scale-95"
                 >
-                  <FaGithub className="size-4" />                </a>
+                  <FaGithub className="size-4" />
+                </a>
                 <a
                   href="https://linkedin.com"
                   target="_blank"
@@ -206,7 +168,7 @@ export default function ContactSection() {
 
           {/* Contact Form */}
           <div className="rounded-3xl border border-border/50 bg-card/60 p-5 shadow-xl backdrop-blur-md sm:p-6 lg:col-span-3">
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
                   <label
@@ -222,8 +184,6 @@ export default function ContactSection() {
                     required
                     autoComplete="name"
                     placeholder="Your name"
-                    value={form.name}
-                    onChange={handleChange}
                     className="w-full rounded-xl border border-border/70 bg-background/50 px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/70 transition-colors focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
@@ -242,8 +202,6 @@ export default function ContactSection() {
                     required
                     autoComplete="email"
                     placeholder="you@example.com"
-                    value={form.email}
-                    onChange={handleChange}
                     className="w-full rounded-xl border border-border/70 bg-background/50 px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/70 transition-colors focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
@@ -262,8 +220,6 @@ export default function ContactSection() {
                   type="text"
                   required
                   placeholder="What's this about?"
-                  value={form.subject}
-                  onChange={handleChange}
                   className="w-full rounded-xl border border-border/70 bg-background/50 px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/70 transition-colors focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>
@@ -281,8 +237,6 @@ export default function ContactSection() {
                   required
                   rows={5}
                   placeholder="Write your message..."
-                  value={form.message}
-                  onChange={handleChange}
                   className="w-full resize-y rounded-xl border border-border/70 bg-background/50 px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/70 transition-colors focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>
@@ -293,8 +247,6 @@ export default function ContactSection() {
                 name="website"
                 tabIndex={-1}
                 autoComplete="off"
-                value={form.website}
-                onChange={handleChange}
                 className="hidden"
                 aria-hidden="true"
               />
@@ -323,10 +275,10 @@ export default function ContactSection() {
 
               <button
                 type="submit"
-                disabled={status.kind === "loading"}
+                disabled={isPending}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-foreground px-5 py-3 text-sm font-semibold text-background shadow-md transition-all hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {status.kind === "loading" ? (
+                {isPending ? (
                   <>
                     <Loader2 className="size-4 animate-spin" />
                     Sending...

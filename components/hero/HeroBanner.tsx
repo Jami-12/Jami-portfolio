@@ -6,11 +6,36 @@ import { motion } from "framer-motion";
 import { Send, Mail } from "lucide-react";
 
 const techStack = [
-  { name: "TypeScript", icon: "TS", color: "text-blue-500", url: "https://www.typescriptlang.org/" },
-  { name: "React", icon: "⚛", color: "text-cyan-400", url: "https://react.dev/" },
-  { name: "Next.js", icon: "N", color: "text-foreground font-bold", url: "https://nextjs.org/" },
-  { name: "Node.js", icon: "JS", color: "text-green-500", url: "https://nodejs.org/" },
-  { name: "PostgreSQL", icon: "🐘", color: "text-sky-500", url: "https://www.postgresql.org/" },
+  {
+    name: "TypeScript",
+    icon: "TS",
+    color: "text-blue-500",
+    url: "https://www.typescriptlang.org/",
+  },
+  {
+    name: "React",
+    icon: "⚛",
+    color: "text-cyan-400",
+    url: "https://react.dev/",
+  },
+  {
+    name: "Next.js",
+    icon: "N",
+    color: "text-foreground font-bold",
+    url: "https://nextjs.org/",
+  },
+  {
+    name: "Node.js",
+    icon: "JS",
+    color: "text-green-500",
+    url: "https://nodejs.org/",
+  },
+  {
+    name: "PostgreSQL",
+    icon: "🐘",
+    color: "text-sky-500",
+    url: "https://www.postgresql.org/",
+  },
 ];
 
 export default function HeroBanner() {
@@ -24,12 +49,13 @@ export default function HeroBanner() {
         className="overflow-hidden rounded-3xl border border-border/50 bg-card/60 backdrop-blur-md shadow-xl"
       >
         <div className="relative h-52 sm:h-58 w-full bg-muted overflow-hidden">
-          <Image
-            src="/cover.gif"
-            alt="Cover Banner"
-            fill
-            className="object-cover"
-            priority
+          <video
+            src="/race.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 h-full w-full object-cover"
           />
         </div>
 
@@ -48,7 +74,7 @@ export default function HeroBanner() {
             </div>
 
             <Link
-              href="#contact"
+              href="/contact"
               className="flex items-center gap-2 rounded-xl bg-foreground px-4 py-2 text-xs sm:text-sm font-medium text-background transition-transform active:scale-95 shadow-sm"
             >
               <Send className="size-3.5" />
@@ -83,7 +109,9 @@ export default function HeroBanner() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 rounded-xl border border-border/60 bg-muted/30 px-3 py-1.5 text-xs font-medium text-foreground transition-all hover:bg-muted active:scale-95"
                   >
-                    <span className={`font-bold ${tech.color}`}>{tech.icon}</span>
+                    <span className={`font-bold ${tech.color}`}>
+                      {tech.icon}
+                    </span>
                     <span>{tech.name}</span>
                   </a>
                 ))}
