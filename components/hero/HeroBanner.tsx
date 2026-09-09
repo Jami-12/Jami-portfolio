@@ -50,7 +50,7 @@ export default function HeroBanner() {
       >
         <div className="relative h-52 sm:h-58 w-full bg-muted overflow-hidden">
           <video
-            src="/race.mp4"
+            src="/anime.mp4"
             autoPlay
             loop
             muted
