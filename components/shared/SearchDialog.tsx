@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, LucideIcon, ArrowRight, CornerDownLeft } from "lucide-react";
+import { Search, LucideIcon, ArrowRight } from "lucide-react";
 
 interface NavItem {
   name: string;

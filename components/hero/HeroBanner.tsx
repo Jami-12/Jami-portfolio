@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Send, Mail } from "lucide-react";
+import { Send, Mail, FileText } from "lucide-react";
 
 const techStack = [
   {
@@ -73,13 +73,42 @@ export default function HeroBanner() {
               />
             </div>
 
-            <Link
-              href="/contact"
-              className="flex items-center gap-2 rounded-xl bg-foreground px-4 py-2 text-xs sm:text-sm font-medium text-background transition-transform active:scale-95 shadow-sm"
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.15 }}
+              className="flex items-center gap-2.5"
             >
-              <Send className="size-3.5" />
-              <span>Get in touch</span>
-            </Link>
+              <motion.div
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 18 }}
+              >
+                <Link
+                  href="/contact"
+                  className="flex items-center gap-2 rounded-xl bg-foreground px-4 py-2 text-xs sm:text-sm font-medium text-background transition-colors hover:opacity-90 shadow-sm"
+                >
+                  <Send className="size-3.5" />
+                  <span>Get in touch</span>
+                </Link>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 18 }}
+              >
+                <Link
+                  href="/resume"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-2 rounded-xl border border-border/70 bg-background/60 px-4 py-2 text-xs sm:text-sm font-medium text-foreground backdrop-blur transition-colors hover:border-emerald-500/40 hover:bg-muted/40 shadow-sm"
+                >
+                  <FileText className="size-3.5 text-emerald-500 transition-transform duration-300 group-hover:scale-110" />
+                  <span>Resume</span>
+                </Link>
+              </motion.div>
+            </motion.div>
           </div>
 
           {/* User Info */}

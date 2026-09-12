@@ -35,7 +35,7 @@ export default function FloatingPlayer() {
           transition={{ type: "spring", stiffness: 400, damping: 30 }}
           role="region"
           aria-label="Now playing"
-          className="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-full border border-border/60 bg-background/80 p-2 pl-3 shadow-2xl backdrop-blur-xl transition-colors hover:border-border"
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-full border border-border/60 bg-background/80 p-2 pl-3 shadow-2xl backdrop-blur-xl transition-colors hover:border-border print:hidden"
         >
           <div className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-border/50 bg-muted">
             {currentTrack.cover ? (

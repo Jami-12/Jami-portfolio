@@ -5,6 +5,8 @@ import Footer from "@/components/shared/Footer";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { AudioProvider, Track } from "@/components/Context/AudioContext";
 import FloatingPlayer from "@/components/Context/FloatingPlayer";
+import CustomCursor from "@/components/cursor/CustomCursor";
+import AiAssistant from "@/components/assistant/AiAssistant";
 
 export const metadata: Metadata = {
   title: "Mujaddid Ahmed Jami | Full Stack Developer",
@@ -50,6 +52,8 @@ export default function RootLayout({
             {children}
             <Footer />
             <FloatingPlayer />
+            <AiAssistant />
+            <CustomCursor />
           </AudioProvider>
         </ThemeProvider>
       </body>

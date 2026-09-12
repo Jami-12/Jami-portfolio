@@ -9,14 +9,15 @@ import {
   Menu,
   X,
   Search,
-  FileText,
   Command,
   Folder,
   Layers,
   BookOpen,
   Sparkles,
+  Terminal,
 } from "lucide-react";
 import SearchDialog from "./SearchDialog";
+import TerminalModal from "@/components/terminal/TerminalModal";
 
 const navItems = [
   { name: "Home", href: "/", icon: Command },
@@ -30,6 +31,7 @@ export default function Navbar() {
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isTerminalOpen, setIsTerminalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   // Keyboard shortcut (Cmd+K / Ctrl+K)
@@ -54,7 +56,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-5 z-50 mx-auto max-w-4xl px-4 transition-all duration-300">
+    <header className="sticky top-5 z-50 mx-auto max-w-4xl px-4 transition-all duration-300 print:hidden">
       {/* Floating Glass Container */}
       <div className="flex items-center justify-between rounded-full border border-white/10 dark:border-white/10 bg-background/60 p-1.5 backdrop-blur-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.12)]">
         {/* Left Side: Desktop Navigation Links */}
@@ -124,16 +126,16 @@ export default function Navbar() {
             </kbd>
           </button>
 
-          {/* Resume Button */}
-          <Link
-            href="/resume"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-foreground px-4 py-1.5 text-xs font-medium text-background transition-all hover:opacity-90 active:scale-95 shadow-sm"
+          {/* Terminal Shell Button */}
+          <button
+            type="button"
+            onClick={() => setIsTerminalOpen(true)}
+            className="flex items-center gap-1.5 rounded-full border border-border/40 bg-muted/30 px-3 py-1.5 text-xs text-muted-foreground transition-all hover:bg-muted/60 hover:text-foreground hover:border-emerald-500/40 active:scale-95"
+            aria-label="Open interactive terminal"
           >
-            <FileText className="size-3.5" />
-            <span>Resume</span>
-          </Link>
+            <Terminal className="size-3.5 text-emerald-500" />
+            <span className="hidden sm:inline-block">&gt;_ Shell</span>
+          </button>
 
           {/* Theme Toggle Button */}
           <ThemeToggle />
@@ -188,20 +190,16 @@ export default function Navbar() {
                   </Link>
                 );
               })}
-
-              <Link
-                href="/resume"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 flex w-full items-center justify-center gap-2 rounded-2xl border border-neutral-800/80 bg-[#111111] py-2.5 text-xs font-medium text-neutral-200 hover:bg-neutral-800 hover:text-white transition-all shadow-sm sm:hidden active:scale-95"
-              >
-                <FileText className="size-4 text-emerald-400" />
-                <span>Resume</span>
-              </Link>
             </nav>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Terminal Shell Modal */}
+      <TerminalModal
+        open={isTerminalOpen}
+        onClose={() => setIsTerminalOpen(false)}
+      />
 
       {/* Search Dialog */}
       <SearchDialog

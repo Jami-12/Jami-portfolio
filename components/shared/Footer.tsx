@@ -27,7 +27,7 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="mx-auto max-w-4xl px-4 pb-24 pt-16 md:pb-28">
+    <footer className="mx-auto max-w-4xl px-4 pb-24 pt-16 md:pb-28 print:hidden">
       <div className="flex flex-col items-center justify-between gap-5 border-t border-border/40 pt-6 text-xs text-muted-foreground sm:flex-row">
         <p>&copy; 2026 Mujaddid Ahmed Jami. All rights reserved.</p>
 
